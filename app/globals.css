@@ -1,26 +1,168 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-bg: #0d1117;
+  --color-surface: #161b22;
+  --color-surface-2: #1c2128;
+  --color-border: #30363d;
+  --color-accent: #00e5cc;
+  --color-accent-dim: #00b8a3;
+  --color-success: #2dce89;
+  --color-error: #e55353;
+  --color-warning: #f5a623;
+  --color-text: #e6edf3;
+  --color-muted: #8b949e;
+  --color-code-bg: #010409;
+
+  --font-sans: var(--font-dm-sans);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  html {
+    background-color: #0d1117;
+    color: #e6edf3;
+    font-family: var(--font-dm-sans), sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    min-height: 100vh;
+    background-color: #0d1117;
+    background-image:
+      radial-gradient(circle at 25% 10%, rgba(0, 229, 204, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 75% 90%, rgba(0, 229, 204, 0.03) 0%, transparent 50%),
+      radial-gradient(#30363d 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 28px 28px;
+    background-position: 0 0, 0 0, 14px 14px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #0d1117;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #30363d;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00e5cc44;
+  }
+
+  ::selection {
+    background: rgba(0, 229, 204, 0.25);
+    color: #e6edf3;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* scanline overlay */
+.scanlines::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@keyframes teal-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(0, 229, 204, 0.3), 0 0 24px rgba(0, 229, 204, 0.1); }
+  50% { box-shadow: 0 0 16px rgba(0, 229, 204, 0.5), 0 0 40px rgba(0, 229, 204, 0.2); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@keyframes boot-line {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glow-in {
+  from { opacity: 0; filter: blur(8px); }
+  to { opacity: 1; filter: blur(0px); }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scaleX(1); }
+  14% { transform: scaleX(1.05); }
+  28% { transform: scaleX(0.97); }
+  42% { transform: scaleX(1.03); }
+  70% { transform: scaleX(1); }
+}
+
+.animate-teal-pulse { animation: teal-pulse 2.5s ease-in-out infinite; }
+.animate-blink { animation: blink 1s step-end infinite; }
+.animate-fade-in { animation: fade-in 0.4s ease-out forwards; }
+.animate-slide-up { animation: slide-up 0.4s ease-out forwards; }
+.animate-glow-in { animation: glow-in 0.6s ease-out forwards; }
+.animate-heartbeat { animation: heartbeat 1.4s ease-in-out infinite; }
+
+.text-glow {
+  text-shadow: 0 0 12px rgba(0, 229, 204, 0.6), 0 0 24px rgba(0, 229, 204, 0.3);
+}
+
+/* CodeMirror overrides */
+.cm-editor {
+  background: #010409 !important;
+  font-family: var(--font-jetbrains-mono), monospace !important;
+  font-size: 14px !important;
+  line-height: 1.6 !important;
+  height: 100% !important;
+}
+
+.cm-editor.cm-focused {
+  outline: none !important;
+}
+
+.cm-scroller {
+  font-family: var(--font-jetbrains-mono), monospace !important;
+}
+
+.cm-gutters {
+  background: #010409 !important;
+  border-right: 1px solid #30363d !important;
+  color: #484f58 !important;
+}
+
+.cm-activeLineGutter {
+  background: #161b22 !important;
+}
+
+.cm-activeLine {
+  background: rgba(0, 229, 204, 0.04) !important;
+}
+
+.cm-cursor {
+  border-left-color: #00e5cc !important;
+}
+
+.cm-selectionBackground {
+  background: rgba(0, 229, 204, 0.15) !important;
 }
