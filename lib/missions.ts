@@ -280,10 +280,194 @@ export const CHAPTERS: Chapter[] = [
   {
     id: 'ch3',
     title: 'Functions & Conditions',
-    subtitle: 'Coming Soon',
-    storyBlurb: 'Build reusable diagnostic functions for the ESKALATOR pipeline.',
-    isBuilt: false,
-    missions: [],
+    subtitle: 'Diagnostic Engine',
+    storyBlurb:
+      'The ESKALATOR pipeline needs reusable logic. Build modular diagnostic functions that classify, validate, and summarise patient data.',
+    isBuilt: true,
+    missions: [
+      {
+        id: 'c3m1',
+        chapterId: 'ch3',
+        title: 'First Function',
+        xp: 120,
+        story:
+          `The pipeline keeps repeating the same logic. Time to fix that.\n\nWrite a function called \`get_status_code\` that takes one argument \`spo2\` and returns 1 if spo2 >= 95, or 0 otherwise.\n\nYour task: define the function.`,
+        starterCode: `# Define get_status_code(spo2)\n# Returns 1 if spo2 >= 95, else 0\n`,
+        tests: [
+          {
+            code: `assert callable(get_status_code), "get_status_code must be a function"`,
+            label: 'get_status_code is callable',
+          },
+          {
+            code: `assert get_status_code(98) == 1, "98 >= 95 should return 1"`,
+            label: 'get_status_code(98) == 1',
+          },
+          {
+            code: `assert get_status_code(90) == 0, "90 < 95 should return 0"`,
+            label: 'get_status_code(90) == 0',
+          },
+          {
+            code: `assert get_status_code(95) == 1, "95 >= 95 should return 1"`,
+            label: 'get_status_code(95) == 1 (boundary)',
+          },
+        ],
+        hints: [
+          'Use `def function_name(parameter):` to define a function, then `return` to send a value back',
+          'Use an if/else inside the function: if spo2 >= 95: return 1  else: return 0',
+          'Full answer:\ndef get_status_code(spo2):\n    if spo2 >= 95:\n        return 1\n    else:\n        return 0',
+        ],
+      },
+      {
+        id: 'c3m2',
+        chapterId: 'ch3',
+        title: 'Status Classifier',
+        xp: 150,
+        story:
+          `A single flag is not enough. The ICU display needs a text label for each reading.\n\nWrite a function \`classify_spo2(value)\` that returns:\n- "CRITICAL" if value < 90\n- "WARNING" if value < 95\n- "NORMAL" otherwise\n\nYour task: implement the three-way classifier.`,
+        starterCode: `# Write classify_spo2(value)\n# Returns "CRITICAL", "WARNING", or "NORMAL"\n`,
+        tests: [
+          {
+            code: `assert classify_spo2(85) == "CRITICAL"`,
+            label: 'classify_spo2(85) == "CRITICAL"',
+          },
+          {
+            code: `assert classify_spo2(92) == "WARNING"`,
+            label: 'classify_spo2(92) == "WARNING"',
+          },
+          {
+            code: `assert classify_spo2(98) == "NORMAL"`,
+            label: 'classify_spo2(98) == "NORMAL"',
+          },
+          {
+            code: `assert classify_spo2(90) == "WARNING", "90 is not < 90, so WARNING"`,
+            label: 'classify_spo2(90) == "WARNING" (boundary)',
+          },
+        ],
+        hints: [
+          'Use if / elif / else — check the strictest condition first (< 90), then the next (< 95)',
+          'Each branch should return the matching string. Remember: strings must be in quotes',
+          'Full answer:\ndef classify_spo2(value):\n    if value < 90:\n        return "CRITICAL"\n    elif value < 95:\n        return "WARNING"\n    else:\n        return "NORMAL"',
+        ],
+      },
+      {
+        id: 'c3m3',
+        chapterId: 'ch3',
+        title: 'Vital Checker',
+        xp: 150,
+        story:
+          `The safety system validates two vitals at once before greenlighting a patient.\n\nWrite a function \`vitals_ok(spo2, heart_rate)\` that returns True only if BOTH conditions hold:\n- spo2 >= 95\n- heart_rate is between 60 and 100 (inclusive)\n\nYour task: combine two conditions with \`and\`.`,
+        starterCode: `# Write vitals_ok(spo2, heart_rate)\n# Returns True only if both vitals are in range\n`,
+        tests: [
+          {
+            code: `assert vitals_ok(97, 75) == True`,
+            label: 'vitals_ok(97, 75) → True',
+          },
+          {
+            code: `assert vitals_ok(93, 75) == False, "spo2 too low"`,
+            label: 'vitals_ok(93, 75) → False (spo2 low)',
+          },
+          {
+            code: `assert vitals_ok(97, 110) == False, "heart rate too high"`,
+            label: 'vitals_ok(97, 110) → False (HR high)',
+          },
+          {
+            code: `assert vitals_ok(95, 60) == True, "boundary values are in range"`,
+            label: 'vitals_ok(95, 60) → True (boundaries)',
+          },
+        ],
+        hints: [
+          'A function can take multiple parameters: def vitals_ok(spo2, heart_rate):',
+          'Use `and` to require both conditions: spo2 >= 95 and 60 <= heart_rate <= 100',
+          'Full answer:\ndef vitals_ok(spo2, heart_rate):\n    return spo2 >= 95 and 60 <= heart_rate <= 100',
+        ],
+      },
+      {
+        id: 'c3m4',
+        chapterId: 'ch3',
+        title: 'Batch Classifier',
+        xp: 180,
+        story:
+          `The pipeline processes readings in batches, not one at a time.\n\nThe \`classify_spo2\` function is already loaded. Use it inside a loop to build a \`statuses\` list from \`readings\`.\n\nYour task: call classify_spo2 on each reading and collect the results.`,
+        starterCode: `def classify_spo2(value):
+    if value < 90:
+        return "CRITICAL"
+    elif value < 95:
+        return "WARNING"
+    else:
+        return "NORMAL"
+
+readings = [98, 92, 85, 97, 93]
+
+# Build statuses by calling classify_spo2 on each reading
+statuses = []
+`,
+        tests: [
+          {
+            code: `assert type(statuses) == list`,
+            label: 'statuses is a list',
+          },
+          {
+            code: `assert len(statuses) == 5`,
+            label: 'statuses has 5 items',
+          },
+          {
+            code: `assert statuses == ["NORMAL", "WARNING", "CRITICAL", "NORMAL", "WARNING"]`,
+            label: 'statuses values correct',
+          },
+        ],
+        hints: [
+          'Use a for loop: for reading in readings:',
+          'Inside the loop, call classify_spo2(reading) and append the result to statuses',
+          'Full answer:\nfor reading in readings:\n    statuses.append(classify_spo2(reading))',
+        ],
+      },
+      {
+        id: 'c3m5',
+        chapterId: 'ch3',
+        title: 'Full Diagnostic',
+        xp: 200,
+        story:
+          `Final mission. The ESKALATOR dashboard needs a summary report for the clinical team.\n\nWrite a function \`run_diagnostic(readings)\` that takes a list of SpO₂ values and returns a dict with four keys:\n- "total" — number of readings\n- "normal" — count of NORMAL readings\n- "warning" — count of WARNING readings\n- "critical" — count of CRITICAL readings\n\nYour task: build the diagnostic engine.`,
+        starterCode: `def classify_spo2(value):
+    if value < 90:
+        return "CRITICAL"
+    elif value < 95:
+        return "WARNING"
+    else:
+        return "NORMAL"
+
+# Write run_diagnostic(readings) below
+# It must return a dict with keys: total, normal, warning, critical
+`,
+        tests: [
+          {
+            code: `result = run_diagnostic([98, 92, 85, 97, 93])`,
+            label: 'run_diagnostic runs without error',
+          },
+          {
+            code: `assert result["total"] == 5`,
+            label: 'result["total"] == 5',
+          },
+          {
+            code: `assert result["normal"] == 2`,
+            label: 'result["normal"] == 2',
+          },
+          {
+            code: `assert result["warning"] == 2`,
+            label: 'result["warning"] == 2',
+          },
+          {
+            code: `assert result["critical"] == 1`,
+            label: 'result["critical"] == 1',
+          },
+        ],
+        hints: [
+          'Start with counts = {"total": 0, "normal": 0, "warning": 0, "critical": 0} and loop through readings',
+          'Inside the loop, use classify_spo2(r) and increment the matching key with counts[status] += 1',
+          'Full answer:\ndef run_diagnostic(readings):\n    counts = {"total": len(readings), "normal": 0, "warning": 0, "critical": 0}\n    for r in readings:\n        status = classify_spo2(r).lower()\n        counts[status] += 1\n    return counts',
+        ],
+      },
+    ],
   },
   {
     id: 'ch4',

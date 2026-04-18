@@ -15,12 +15,16 @@ export default function WorldMapPage() {
 
   useEffect(() => setMounted(true), [])
 
-  const ch1Missions = CHAPTERS[0].missions.map((m) => m.id)
-  const ch1Done = ch1Missions.every((id) => completed.includes(id))
+  function isChapterDone(chapterId: string) {
+    const ch = CHAPTERS.find((c) => c.id === chapterId)
+    if (!ch || ch.missions.length === 0) return false
+    return ch.missions.every((m) => completed.includes(m.id))
+  }
 
   function isChapterUnlocked(chapterId: string) {
     if (chapterId === 'ch1') return true
-    if (chapterId === 'ch2') return ch1Done
+    if (chapterId === 'ch2') return isChapterDone('ch1')
+    if (chapterId === 'ch3') return isChapterDone('ch2')
     return false
   }
 
