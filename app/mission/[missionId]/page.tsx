@@ -8,6 +8,7 @@ import { getMission, CHAPTERS } from '@/lib/missions'
 import { calcMissionXP } from '@/lib/xp'
 import HintPanel from '@/components/HintPanel'
 import XPBar from '@/components/XPBar'
+import UserMenu from '@/components/UserMenu'
 import SplashLoader from '@/components/SplashLoader'
 
 const PythonEditor = dynamic(
@@ -105,8 +106,9 @@ export default function MissionPage() {
           </div>
         )}
 
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-3">
           <XPBar />
+          <UserMenu />
         </div>
       </header>
 

@@ -6,6 +6,7 @@ import { useGameStore } from '@/lib/store'
 import { getChapter } from '@/lib/missions'
 import MissionCard from '@/components/MissionCard'
 import XPBar from '@/components/XPBar'
+import UserMenu from '@/components/UserMenu'
 
 export default function ChapterPage() {
   const params = useParams()
@@ -58,8 +59,9 @@ export default function ChapterPage() {
             ESKALATOR
           </span>
         </div>
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-3">
           <XPBar />
+          <UserMenu />
         </div>
       </header>
 

@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { DM_Sans, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
+import AuthProvider from '@/components/AuthProvider'
+import ProgressSync from '@/components/ProgressSync'
 
 const dmSans = DM_Sans({
   variable: '--font-dm-sans',
@@ -32,7 +34,10 @@ export default function RootLayout({
       className={`${dmSans.variable} ${jetbrainsMono.variable} h-full`}
     >
       <body className="scanlines min-h-full flex flex-col antialiased">
-        {children}
+        <AuthProvider>
+          <ProgressSync />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   )

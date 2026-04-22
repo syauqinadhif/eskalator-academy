@@ -6,6 +6,7 @@ import { useGameStore } from '@/lib/store'
 import { CHAPTERS } from '@/lib/missions'
 import ChapterNode from '@/components/ChapterNode'
 import XPBar from '@/components/XPBar'
+import UserMenu from '@/components/UserMenu'
 
 export default function WorldMapPage() {
   const router = useRouter()
@@ -23,8 +24,8 @@ export default function WorldMapPage() {
 
   function isChapterUnlocked(chapterId: string) {
     if (chapterId === 'ch1') return true
-    if (chapterId === 'ch2') return isChapterDone('ch1')
-    if (chapterId === 'ch3') return isChapterDone('ch2')
+    if (chapterId === 'ch2') return true
+    if (chapterId === 'ch3') return true
     return false
   }
 
@@ -53,7 +54,7 @@ export default function WorldMapPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-4 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
           <XPBar />
           <a
             href="/playground"
@@ -61,6 +62,7 @@ export default function WorldMapPage() {
           >
             PLAYGROUND
           </a>
+          <UserMenu />
         </div>
       </header>
 
@@ -86,7 +88,7 @@ export default function WorldMapPage() {
               key={ch.id}
               chapter={ch}
               completedCount={mounted ? completedCount(ch.id) : 0}
-              isUnlocked={mounted ? isChapterUnlocked(ch.id) : ch.id === 'ch1'}
+              isUnlocked={mounted ? isChapterUnlocked(ch.id) : ['ch1','ch2','ch3'].includes(ch.id)}
               onClick={() => router.push(`/chapter/${ch.id}`)}
             />
           ))}
